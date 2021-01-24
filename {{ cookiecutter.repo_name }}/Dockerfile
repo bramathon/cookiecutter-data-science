@@ -10,7 +10,10 @@ RUN PIPENV_VENV_IN_PROJECT=1 \
     --deploy
 
 # Base Image
-FROM tensorflow/tensorflow:2.3.1-gpu as base
+FROM tensorflow/tensorflow:2.3.1 as base
+
+# For GPU support, use this line instead of above
+# FROM tensorflow/tensorflow:2.3.1-gpu as base
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
