@@ -1,5 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
-
+.PHONY: clean
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
@@ -23,7 +22,7 @@ up:
 
 ## Start a shell inside the container
 bash:
-	docker-compose exec app bash
+	docker-compose exec notebook bash
 
 stop:
 	docker-compose stop

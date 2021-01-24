@@ -2,22 +2,23 @@ version: '3.5'
 
 services:
   
-  bash:
+  dvc:
     build:
       context: .
       target: prod
-    image: {{ cookiecutter.repo_name }}
-    runtime: nvidia
+    image: data-science/{{ cookiecutter.repo_name }}
+    # runtime: nvidia
     volumes:
       - .:/home/nte/app
       - ${HOME}/.aws:/home/nte/.aws
-    command: /bin/bash
+    entrypoint: [dvc]
+    command: [--help]
     
   notebook:
     build:
       context: .
       target: dev
-    image: {{ cookiecutter.repo_name }}:dev
+    image: data-science/{{ cookiecutter.repo_name }}:dev
     runtime: nvidia
     container_name: template-notebook
     volumes:
