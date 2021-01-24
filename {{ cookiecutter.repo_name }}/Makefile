@@ -27,8 +27,9 @@ bash:
 stop:
 	docker-compose stop
 
-## Delete all compiled Python files
+## Delete all compiled Python files, clean up stopped containers
 clean:
+	docker container prune
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
