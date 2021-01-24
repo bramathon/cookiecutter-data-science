@@ -1,0 +1,16 @@
+stages:
+  train:
+    cmd: |
+      python src/models/train.py \
+        --params params.yaml
+    deps:
+      - Pipfile.lock
+      - src/train.py
+    params:
+      - random_seed
+      - priors
+    outs:
+      - models/preds.csv
+    metrics:
+      - models/metrics.yaml:
+          cache: false

@@ -1,0 +1,33 @@
+version: '3.5'
+
+services:
+  
+  bash:
+    build:
+      context: .
+      target: prod
+    image: {{ cookiecutter.repo_name }}
+    runtime: nvidia
+    volumes:
+      - .:/home/nte/app
+      - ${HOME}/.aws:/home/nte/.aws
+    command: /bin/bash
+    
+  notebook:
+    build:
+      context: .
+      target: dev
+    image: {{ cookiecutter.repo_name }}:dev
+    runtime: nvidia
+    container_name: template-notebook
+    volumes:
+      - .:/home/nte/app
+      - ${HOME}/.aws:/home/nte/.aws
+    ports:
+      - 8888:8888
+    command:
+      - jupyter
+      - lab
+      - --LabApp.token=''
+      - --ip=0.0.0.0
+      - --no-browser
