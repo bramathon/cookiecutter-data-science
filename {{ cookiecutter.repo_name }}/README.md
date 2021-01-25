@@ -28,15 +28,13 @@ Project Organization
     ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
     │   └── figures        <- Generated graphics and figures to be used in reporting
     │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
+    ├── Pipfile            <- The requirements file for reproducing the analysis environment
+    ├── Pipfile.lock       <- The lock-file for the requirements
     │
     ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
     ├── src                <- Source code for use in this project.
     │   ├── __init__.py    <- Makes src a Python module
     │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
     │   │
     │   ├── features       <- Scripts to turn raw data into features for modeling
     │   │   └── build_features.py
@@ -54,4 +52,71 @@ Project Organization
 
 --------
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+<p><small>Project based on the <a target="_blank" href="https://github.com/bramathon/cookiecutter-data-science">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+
+# Initializing the project:
+
+## Initialize git
+
+```bash
+git init
+```
+
+## Initialize dvc
+
+```bash
+dvc init
+git commit -m 'Initialized DVC'
+```
+
+## Add your data
+
+The first thing to do is add the raw data. Put it in data/raw and use the dvc add command eg.
+
+```bash
+cp raw_data.csv to data/raw/
+docker-compose run --rm dvc add 
+```
+
+## Downloading data
+
+Use the DVC pull and push commands to pull the data files from the cache. The DVC docker container can be used for this:
+
+```bash
+docker-compose run --rm dvc pull
+docker-compose run --rm dvc push
+```
+
+## Train the model (example)
+
+To build the project, run
+
+```bash
+docker-compose run dvc repro
+```
+
+# Built-in Infrastructure
+
+## CircleCI config
+
+The `.circleci/config.yml` file provides automated build and test.
+
+## Pre-commit hooks
+
+For more info: https://pre-commit.com/
+
+The pre-commit hooks automatically runs the linter and checks that large files are not commited to the repo on each commit.
+
+To enable it, run the command (in the pipenv or docker):
+
+```bash
+pre-commit install
+```
+
+It's a good idea to actually run the checks on the current repo once enabled
+
+```bash
+pre-commit run --all-files
+```
+
+To add new hooks, edit the file `.pre-commit-config.yaml`
