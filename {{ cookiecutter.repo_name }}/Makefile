@@ -17,7 +17,7 @@ build:
 	docker-compose build
 
 ## Start the containers
-up:
+start:
 	docker-compose up -d
 
 ## Start a shell inside the container

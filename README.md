@@ -1,9 +1,9 @@
 # Cookiecutter Data Science
 
-_A logical, reasonably standardized, but flexible project structure for doing and sharing data science work._
+_A template for doing data science project, based on cookiecutter-data-science. Modified to use a docker and DVC based workflow_
 
 
-#### [Project homepage](http://drivendata.github.io/cookiecutter-data-science/)
+#### [Project homepage](https://github.com/bramathon/cookiecutter-data-science)
 
 
 ### Requirements to use the cookiecutter template:
@@ -18,8 +18,7 @@ $ pip install cookiecutter
 or
 
 ``` bash
-$ conda config --add channels conda-forge
-$ conda install cookiecutter
+$ conda install cookiecutter -c conda-forge
 ```
 
 
@@ -39,7 +38,7 @@ The directory structure of your new project looks like this:
 
 ```
 ├── LICENSE
-├── Makefile           <- Makefile with commands like `make data` or `make train`
+├── Makefile           <- Makefile with commands like `make build` or `make clean`
 ├── README.md          <- The top-level README for developers using this project.
 ├── data
 │   ├── external       <- Data from third party sources.
@@ -66,8 +65,6 @@ The directory structure of your new project looks like this:
 ├── src                <- Source code for use in this project.
 │   ├── __init__.py    <- Makes src a Python module
 │   │
-│   ├── data           <- Scripts to download or generate data
-│   │   └── make_dataset.py
 │   │
 │   ├── features       <- Scripts to turn raw data into features for modeling
 │   │   └── build_features.py
@@ -82,10 +79,6 @@ The directory structure of your new project looks like this:
 │
 └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 ```
-
-## Contributing
-
-We welcome contributions! [See the docs for guidelines](https://drivendata.github.io/cookiecutter-data-science/#contributing).
 
 ### Installing development requirements
 ------------

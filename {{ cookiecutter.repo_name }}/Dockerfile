@@ -9,11 +9,22 @@ RUN PIPENV_VENV_IN_PROJECT=1 \
     pipenv install \
     --deploy
 
+
+# Base Image
+{%- if cookiecutter.gpu == "y" -%}
+FROM tensorflow/tensorflow:2.3.1-gpu as base
+
+{%- else -%}
+FROM tensorflow/tensorflow:2.3.1 as base
+
+{% endif %}
+
 # Base Image
 FROM tensorflow/tensorflow:2.3.1 as base
 
-# For GPU support, use this line instead of above
-# FROM tensorflow/tensorflow:2.3.1-gpu as base
+{%- if cookiecutter.variable_name== ‘y’ %}
+FROM tensorflow/tensorflow:2.3.1-gpu as base
+{%- endif %}
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
