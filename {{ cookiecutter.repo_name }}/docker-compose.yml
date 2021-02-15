@@ -8,9 +8,7 @@ services:
     
     {%- if cookiecutter.gpu == "Use GPU" -%}
     runtime: nvidia
-    
     {% endif %}
-    
     container_name: {{ cookiecutter.repo_name }}
     volumes:
       - .:/home/{{ cookiecutter.author_name }}/{{ cookiecutter.repo_name }}

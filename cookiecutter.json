@@ -1,5 +1,5 @@
 {
-    "project_name": "project_name",
+    "project_name": "data-science-project",
     "repo_name": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
     "author_name": "scientist",
     "description": "A short description of the project.",
