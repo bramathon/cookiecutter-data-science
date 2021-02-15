@@ -1,34 +1,17 @@
 version: '3.5'
 
 services:
-  
-  dvc:
-    build:
-      context: .
-      target: prod
-    image: data-science/{{ cookiecutter.repo_name }}
-    {%- if cookiecutter.gpu == "y" -%}
-    runtime: nvidia
-    {% endif %}
-    container_name: {{ cookiecutter.repo_name }}-dvc
-    volumes:
-      - .:/home/nte/app
-      - ${HOME}/.aws:/home/nte/.aws
-    entrypoint: [dvc]
-    command: [--help]
-    
   notebook:
     build:
       context: .
-      target: dev
     image: data-science/{{ cookiecutter.repo_name }}:dev
-    {%- if cookiecutter.gpu == "y" -%}
+    {%- if cookiecutter.gpu == "Use GPU" -%}
     runtime: nvidia
     {% endif %}
-    container_name: {{ cookiecutter.repo_name }}-notebook
+    container_name: {{ cookiecutter.repo_name }}
     volumes:
-      - .:/home/nte/app
-      - ${HOME}/.aws:/home/nte/.aws
+      - .:/home/{{ cookiecutter.author_name }}/{{ cookiecutter.repo_name }}
+      - ${HOME}/.aws:/home/{{ cookiecutter.author_name }}/.aws
     ports:
       - 8888:8888
     command:
