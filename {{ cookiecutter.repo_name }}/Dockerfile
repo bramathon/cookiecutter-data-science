@@ -12,7 +12,7 @@ RUN PIPENV_VENV_IN_PROJECT=1 \
     --deploy
 
 # Base Image
-{%- if cookiecutter.gpu == "y" -%}
+{%- if cookiecutter.gpu == "Use GPU" -%}
 FROM tensorflow/tensorflow:2.4.1-gpu
 
 {%- else -%}
@@ -46,7 +46,7 @@ RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - \
 COPY --from=amazon/aws-cli:2.1.9 /usr/local/aws-cli/v2/current /usr/local
 
 # Set up default user 'scientist'
-ARG USER=scientist
+ARG USER={{ cookiecutter.author_name }}
 ARG UID=1000
 ARG GID=1000
 RUN addgroup --gid ${GID} ${USER} \
