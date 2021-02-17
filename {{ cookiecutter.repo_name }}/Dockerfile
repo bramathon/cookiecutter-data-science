@@ -12,10 +12,10 @@ RUN PIPENV_VENV_IN_PROJECT=1 \
     --deploy
 
 # Base Image
-{%- if cookiecutter.gpu == "Use GPU" -%}
+{% if cookiecutter.gpu == "Use GPU" %}
 FROM tensorflow/tensorflow:2.4.1-gpu
 
-{%- else -%}
+{% else %}
 FROM tensorflow/tensorflow:2.4.1
 
 {% endif %}

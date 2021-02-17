@@ -5,8 +5,7 @@ services:
     build:
       context: .
     image: data-science/{{ cookiecutter.repo_name }}:dev
-    
-    {%- if cookiecutter.gpu == "Use GPU" -%}
+    {% if cookiecutter.gpu == "Use GPU" %}
     runtime: nvidia
     {% endif %}
     container_name: {{ cookiecutter.repo_name }}
