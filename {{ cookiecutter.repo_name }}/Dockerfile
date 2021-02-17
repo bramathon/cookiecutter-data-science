@@ -1,51 +1,26 @@
-# Install pipenv
-FROM python:3.8 as packages
-RUN pip install --upgrade pip \
- && pip install pipenv==2020.11.15
-
-# Copy the Pipfile and Pipfile.lock
-ARG PACKAGES_DIR=/opt/python/.venv
-WORKDIR ${PACKAGES_DIR}/..
-COPY Pipfile Pipfile.lock ./
-RUN PIPENV_VENV_IN_PROJECT=1 \
-    pipenv install \
-    --deploy
-
 # Base Image
 {% if cookiecutter.gpu == "Use GPU" %}
 FROM tensorflow/tensorflow:2.4.1-gpu
-
 {% else %}
 FROM tensorflow/tensorflow:2.4.1
-
 {% endif %}
 
-# Install some utilities
+# Install basic packages
 # Link python3.8 to 'python' and 'python3'
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-        bash-completion=1:2.8-1ubuntu1 \
-        graphviz=2.40.1-2 \
-        emacs \
-        curl=7.58.0-2ubuntu3.12 \
-        git=1:2.17.1-1ubuntu0.7 \
-        jq=1.5+dfsg-2 \
-        less=487-0.1 \
-        openssh-client=1:7.6p1-4ubuntu0.3 \
+        git \
+        gnuplot \
+        jq \
+        less \
+        openssh-client \
         python3.8=3.8.0-3~18.04 \
  && rm -rf /var/lib/apt/lists/* \
  && ln -sf $(which python3.8) $(which python || echo '/usr/local/bin/python') \
  && ln -sf $(which python3.8) $(which python3 || echo '/usr/local/bin/python3') \
     && python -m pip install --no-cache-dir --upgrade pip
 
-# nodejs
-RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - \
- && apt-get install -y nodejs
-
-# aws cli
-COPY --from=amazon/aws-cli:2.1.9 /usr/local/aws-cli/v2/current /usr/local
-
-# Set up default user 'scientist'
+# Set up default user '{{ cookiecutter.author_name }}'
 ARG USER={{ cookiecutter.author_name }}
 ARG UID=1000
 ARG GID=1000
@@ -57,15 +32,25 @@ RUN addgroup --gid ${GID} ${USER} \
     --uid ${UID} \
     ${USER}
 
-# Default directory is /home/scientist/{{ cookiecutter.repo_name }}
-ARG APP_DIR=/home/${USER}/{{ cookiecutter.repo_name }}
+# Default directory is /home/scientist/data-science-project
+ARG APP_DIR=/home/${USER}/data-science-project
 RUN mkdir -p ${APP_DIR} \
- && chown ${USER}:${USER} ${APP_DIR}
+    && chown ${USER}:${USER} ${APP_DIR}
 
-WORKDIR ${APP_DIR}
+# Install dev packages...
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+  && apt-get install -y --no-install-recommends \
+        bash-completion \
+        groff \
+        nano \
+        emacs \
+        nodejs \
+        python3.8-dev=3.8.0-3~18.04 \
+ && rm -rf /var/lib/apt/lists/* \
+ && pip install --no-cache-dir pipenv==2020.11.15
 
-# install the Pipfile
-COPY --chown=${USER}:${USER} Pipfile Pipfile.lock ./
+# Install the pipenv
+COPY Pipfile Pipfile.lock setup.py ./
 RUN PIP_NO_CACHE_DIR=1 \
     PIP_UPGRADE=1 \
     pipenv install \
@@ -73,16 +58,19 @@ RUN PIP_NO_CACHE_DIR=1 \
     --dev \
     --system
 
-# jupyterlab extensions
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
-RUN jupyter labextension install jupyterlab-plotly
-RUN jupyter labextension install plotlywidget
-RUN jupyter labextension install @aquirdturtle/collapsible_headings
-RUN jupyter labextension install @jupyterlab/toc
+# Jupyterlab build
+RUN jupyter labextension install --no-build \
+        jupyterlab-plotly@4.14.3 \
+        plotlywidget@4.14.3 \
+        @aquirdturtle/collapsible_headings \
+ && jupyter lab build
 
-# install the src package
+# Install the src package
 COPY --chown=${USER}:${USER} . .
 RUN pip install --no-cache-dir --editable .
+
+# AWS cli
+COPY --from=amazon/aws-cli:2.1.9 /usr/local/aws-cli/v2/current /usr/local
 
 USER ${USER}
 ENV SHELL /bin/bash
